@@ -1,19 +1,18 @@
 <?php
 
-namespace App\JsonApi\V1\Posts;
+namespace App\JsonApi\V1\Users;
 
-use App\Models\Post;
+use App\Models\User;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
-use LaravelJsonApi\Eloquent\Fields\Relations\BelongsTo;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasMany;
 use LaravelJsonApi\Eloquent\Fields\Str;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
 
-class PostSchema extends Schema
+class UserSchema extends Schema
 {
 
     /**
@@ -21,7 +20,7 @@ class PostSchema extends Schema
      *
      * @var string
      */
-    public static string $model = Post::class;
+    public static string $model = User::class;
 
     /**
      * Get the resource fields.
@@ -32,13 +31,12 @@ class PostSchema extends Schema
     {
         return [
             ID::make(),
-            BelongsTo::make('author')->type('users')->readOnly(),
-            HasMany::make('comments')->readOnly(),
             DateTime::make('createdAt')->sortable()->readOnly(),
             DateTime::make('updatedAt')->sortable()->readOnly(),
-            Str::make('content'),
-            Str::make('slug'),
-            Str::make('title')->sortable(),
+            Str::make('username'),
+            Str::make('name'),
+            HasMany::make('posts')->readOnly(),
+            HasMany::make('comments')->readOnly(),
         ];
     }
 

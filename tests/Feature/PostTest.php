@@ -73,6 +73,20 @@ class PostTest extends TestCase
                             'content' => 'Content 0',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/author',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/author',
+                                ],
+                            ],
+                            'comments' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
+                                ],
+                            ]
                         ]
                     ],
                     [
@@ -87,6 +101,20 @@ class PostTest extends TestCase
                             'content' => 'Content 1',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/2/author',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/2/relationships/author',
+                                ],
+                            ],
+                            'comments' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/2/comments',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/2/relationships/comments',
+                                ],
+                            ]
                         ]
                     ]
                 ],
