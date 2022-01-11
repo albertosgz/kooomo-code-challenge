@@ -20,15 +20,8 @@ class PostPaginatedTest extends TestCase
     {
         $posts = Post::factory()
             ->count(2)
-            ->for(User::factory()->state([
-                'email' => 'test@test.com',
-                'name' => 'foo bar',
-                'username' => 'foobar',
-            ]), 'author')
+            ->for(User::factory(), 'author')
             ->sequence(fn ($sequence) => [
-                'title' => 'Title '.$sequence->index,
-                'content' => 'Content '.$sequence->index,
-                'slug' => 'slug-'.$sequence->index,
                 'is_published' => (bool) $sequence->index,
             ])
             ->create();
@@ -124,4 +117,34 @@ class PostPaginatedTest extends TestCase
         $response->assertFetchedMany($publishedComments);
     }
 
+
+    public function test_get_second_page()
+    {
+        $user = User::factory();
+        $posts = Post::factory()
+            ->count(20)
+            ->for($user, 'author')
+            ->create(['is_published' => true]);
+
+        $response = $this
+            ->jsonApi()
+            ->expects('posts')
+            ->page(['number' => 1, 'size' => 10])
+            ->get('/api/v1/posts');
+
+        $response->assertJson([
+            'meta' => [
+                'page' => [
+                    'currentPage' => 1,
+                    'from' => 1,
+                    'lastPage' => 2,
+                    'perPage' => 10,
+                    'to' => 10,
+                    'total' => 20
+                ]
+            ]
+        ]);
+
+        $response->assertFetchedMany($posts->slice(0, 10));
+    }
 }
