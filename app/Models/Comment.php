@@ -13,7 +13,14 @@ class Comment extends Model
     /**
      * @var string[]
      */
-    protected $fillable = ['content'];
+    protected $fillable = ['content', 'is_published'];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'is_published' => 'boolean',
+    ];
 
     /**
      * @return BelongsTo

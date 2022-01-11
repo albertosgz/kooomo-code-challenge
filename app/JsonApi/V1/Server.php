@@ -2,6 +2,8 @@
 
 namespace App\JsonApi\V1;
 
+use App\JsonApi\V1\Comments\CommentPublishedScope;
+use App\Models\Comment;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
 class Server extends BaseServer
@@ -21,7 +23,7 @@ class Server extends BaseServer
      */
     public function serving(): void
     {
-        // no-op
+        Comment::addGlobalScope(new CommentPublishedScope());
     }
 
     /**
