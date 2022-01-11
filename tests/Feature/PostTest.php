@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Comment;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,22 +19,22 @@ class PostTest extends TestCase
     public function test_default_post_route_available()
     {
         $response = $this->get('/api/v1/posts');
-
         $response->assertStatus(200);
     }
 
-    public function test_first_post_not_available()
+    public function test_first_post_not_available_when_db_empty()
     {
         $response = $this->get('/api/v1/posts/1');
-
         $response->assertStatus(404);
     }
 
-    public function test_get_first_post() {
-        $posts = Post::factory()
+    public function test_get_index_of_posts_if_published() {
+        Post::factory()
             ->count(2)
             ->for(User::factory()->state([
                 'email' => 'test@test.com',
+                'name' => 'foo bar',
+                'username' => 'foobar',
             ]), 'author')
             ->sequence(fn ($sequence) => [
                 'title' => 'Title '.$sequence->index,
@@ -53,9 +54,8 @@ class PostTest extends TestCase
             'title' => 'Title 1',
         ]);
 
-        $response = $this->getJson('/api/v1/posts');
-
-        $response->assertStatus(200)
+        $this->getJson('/api/v1/posts')
+            ->assertStatus(200)
             ->assertExactJson([
                 'jsonapi' => [
                     'version' => '1.0',
@@ -63,42 +63,14 @@ class PostTest extends TestCase
                 'data' => [
                     [
                         'type' => 'posts',
-                        'id' => '1',
-                        'links' => [
-                            'self' => self::URL_HOSTNAME . '/api/v1/posts/1',
-                        ],
-                        'attributes' => [
-                            'title' => 'Title 0',
-                            'slug' => 'slug-0',
-                            'content' => 'Content 0',
-                            'createdAt' => '2022-01-01T00:00:01.000000Z',
-                            'updatedAt' => '2022-01-01T00:00:01.000000Z',
-                        ],
-                        'relationships' => [
-                            'author' => [
-                                'links' => [
-                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/author',
-                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/author',
-                                ],
-                            ],
-                            'comments' => [
-                                'links' => [
-                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
-                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
-                                ],
-                            ]
-                        ]
-                    ],
-                    [
-                        'type' => 'posts',
                         'id' => '2',
                         'links' => [
                             'self' => self::URL_HOSTNAME . '/api/v1/posts/2',
                         ],
                         'attributes' => [
-                            'title' => 'Title 1',
-                            'slug' => 'slug-1',
-                            'content' => 'Content 1',
+                            'title' => 'Title 0',
+                            'slug' => 'slug-0',
+                            'content' => 'Content 0',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
                         ],
@@ -116,8 +88,230 @@ class PostTest extends TestCase
                                 ],
                             ]
                         ]
+                    ],
+                    [
+                        'type' => 'posts',
+                        'id' => '3',
+                        'links' => [
+                            'self' => self::URL_HOSTNAME . '/api/v1/posts/3',
+                        ],
+                        'attributes' => [
+                            'title' => 'Title 1',
+                            'slug' => 'slug-1',
+                            'content' => 'Content 1',
+                            'createdAt' => '2022-01-01T00:00:01.000000Z',
+                            'updatedAt' => '2022-01-01T00:00:01.000000Z',
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/3/author',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/3/relationships/author',
+                                ],
+                            ],
+                            'comments' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/3/comments',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/3/relationships/comments',
+                                ],
+                            ]
+                        ]
                     ]
                 ],
+            ]);
+    }
+    public function test_read_a_post_when_is_published() {
+        $post = Post::factory()
+            ->for(User::factory(), 'author')
+            ->sequence(fn ($sequence) => [
+                'title' => 'Title '.$sequence->index,
+                'content' => 'Content '.$sequence->index,
+                'slug' => 'slug-'.$sequence->index,
+                'created_at' => '2022-01-01 00:00:01',
+                'updated_at' => '2022-01-01 00:00:01',
+            ])
+            ->create([
+                'is_published' => true,
+            ]);
+
+        logger($post);
+
+        $this->assertDatabaseHas('posts', [
+            'id' => 4,
+        ]);
+
+
+        $this->getJson('/api/v1/posts/4')
+            ->assertStatus(200)
+            ->assertExactJson([
+                'jsonapi' => [
+                    'version' => '1.0',
+                ],
+                'data' => [
+                    'type' => 'posts',
+                    'id' => '4',
+                    'links' => [
+                        'self' => self::URL_HOSTNAME . '/api/v1/posts/4',
+                    ],
+                    'attributes' => [
+                        'title' => 'Title 0',
+                        'slug' => 'slug-0',
+                        'content' => 'Content 0',
+                        'createdAt' => '2022-01-01T00:00:01.000000Z',
+                        'updatedAt' => '2022-01-01T00:00:01.000000Z',
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'links' => [
+                                'related' => self::URL_HOSTNAME . '/api/v1/posts/4/author',
+                                'self' => self::URL_HOSTNAME . '/api/v1/posts/4/relationships/author',
+                            ],
+                        ],
+                        'comments' => [
+                            'links' => [
+                                'related' => self::URL_HOSTNAME . '/api/v1/posts/4/comments',
+                                'self' => self::URL_HOSTNAME . '/api/v1/posts/4/relationships/comments',
+                            ],
+                        ]
+                    ]
+                ],
+                'links' => [
+                    'self' =>  self::URL_HOSTNAME . '/api/v1/posts/4',
+                ]
+            ]);
+    }
+
+    public function test_get_user_relationship_for_post_when_is_published() {
+        $posts = Post::factory()
+            ->count(1)
+            ->for(User::factory()->state([
+                'email' => 'test@test.com',
+                'name' => 'foo bar',
+                'username' => 'foobar',
+            ]), 'author')
+            ->create([
+                'title' => 'Title 1',
+                'is_published' => true,
+            ]);
+
+        $user = $posts->first()->author;
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@test.com',
+        ]);
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Title 1',
+        ]);
+
+        $this->getJson('/api/v1/posts/5/author')
+            ->assertStatus(200)
+            ->assertJson([
+                'jsonapi' => [
+                    'version' => '1.0',
+                ],
+                'data' => [
+                    'type' => 'users',
+                    'id' => '4',
+                    'links' => [
+                        'self' => self::URL_HOSTNAME . '/api/v1/users/4',
+                    ],
+                    'attributes' => [
+                        'name' => 'foo bar',
+                        'username' => 'foobar',
+                        'createdAt' => $user->created_at->jsonSerialize(),
+                        'updatedAt' => $user->updated_at->jsonSerialize(),
+                    ],
+                ],
+                'links' => [
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/5/author',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/5/relationships/author',
+                ],
+            ]);
+    }
+
+    public function test_get_comment_relationship_for_post_when_is_published() {
+
+        $user = User::factory()->create();
+        $post = Post::factory()
+            ->for($user, 'author')
+            ->create([
+                'is_published' => true,
+            ]);
+
+        $comment = Comment::factory()
+            ->for($post)
+            ->for($user, 'author')
+            ->create([
+                'content' => 'comment content...',
+                'is_published' => true,
+            ]);
+
+        $this->assertDatabaseHas('comments', [
+            'content' => 'comment content...',
+        ]);
+
+        $this->getJson('/api/v1/posts/6/comments')
+            ->assertStatus(200)
+            ->assertJson([
+                'jsonapi' => [
+                    'version' => '1.0',
+                ],
+                'data' => [
+                    [
+                        'type' => 'comments',
+                        'id' => '1',
+                        'links' => [
+                            'self' => self::URL_HOSTNAME . '/api/v1/comments/1',
+                        ],
+                        'attributes' => [
+                            'content' => 'comment content...',
+                        ],
+                    ]
+                ],
+                'links' => [
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/6/comments',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/6/relationships/comments',
+                ]
+            ]);
+    }
+
+    public function test_get_comment_relationship_for_post_when_is_published_has_no_attributes() {
+
+        $user = User::factory()->create();
+        $post = Post::factory()
+            ->for($user, 'author')
+            ->create([
+                'is_published' => true,
+            ]);
+
+        $comment = Comment::factory()
+            ->for($post)
+            ->for($user, 'author')
+            ->create([
+                'content' => 'comment content 2...',
+                'is_published' => true,
+            ]);
+
+        $this->assertDatabaseHas('comments', [
+            'content' => 'comment content 2...',
+        ]);
+
+        $this->getJson('/api/v1/posts/7/relationships/comments')
+            ->assertStatus(200)
+            ->assertJson([
+                'jsonapi' => [
+                    'version' => '1.0',
+                ],
+                'data' => [
+                    [
+                        'type' => 'comments',
+                        'id' => '2',
+                    ]
+                ],
+                'links' => [
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/7/comments',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/7/relationships/comments',
+                ]
             ]);
     }
 }
