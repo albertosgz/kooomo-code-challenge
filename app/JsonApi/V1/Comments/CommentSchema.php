@@ -34,7 +34,7 @@ class CommentSchema extends Schema
             DateTime::make('createdAt')->sortable()->readOnly(),
             DateTime::make('updatedAt')->sortable()->readOnly(),
             Str::make('content'),
-            BelongsTo::make('author')->readOnly(),
+            BelongsTo::make('author')->type('users')->readOnly(),
         ];
     }
 

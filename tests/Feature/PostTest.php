@@ -314,4 +314,100 @@ class PostTest extends TestCase
                 ]
             ]);
     }
+
+    public function test_including_comments_and_author_getting_post_when_are_published() {
+
+        $user = User::factory()->create([
+            'username' => 'foobar',
+            'name' => 'foo bar',
+        ]);
+        $post = Post::factory()
+            ->for($user, 'author')
+            ->create([
+                'is_published' => true,
+                'slug' => 'slug-post',
+                'title' => 'Post Title',
+                'content' => 'Post content...',
+            ]);
+
+        $comment = Comment::factory()
+            ->for($post)
+            ->for($user, 'author')
+            ->create([
+                'content' => 'comment content 2...',
+                'is_published' => true,
+            ]);
+
+        $this->assertDatabaseHas('comments', [
+            'content' => 'comment content 2...',
+        ]);
+
+        $this->getJson('/api/v1/posts/8?include=author,comments.author')
+            ->assertStatus(200)
+            ->assertJson([
+                'jsonapi' => [
+                    'version' => '1.0',
+                ],
+                'data' => [
+                    'type' => 'posts',
+                    'id' => '8',
+                    'attributes' => [
+                        'createdAt' => $post->created_at->jsonSerialize(),
+                        'updatedAt' => $post->updated_at->jsonSerialize(),
+                        'content' => 'Post content...',
+                        'slug' => 'slug-post',
+                        'title' => 'Post Title'
+                    ],
+                ],
+                'included' =>[
+                    [
+                        'type' => 'users',
+                        'id' => '7',
+                        'attributes' => [
+                            'username' => 'foobar',
+                            'name' => 'foo bar'
+                        ],
+                        'relationships' => [
+                            'posts' => [
+                                'links' => [
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/7/posts',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/7/relationships/posts'
+                                ]
+                            ],
+                            'comments' => [
+                                'links' => [
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/7/comments',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/7/relationships/comments'
+                                ]
+                            ]
+                        ],
+                        'links' => [
+                            'self' => 'http://kooomo-code-challenge.test/api/v1/users/7'
+                        ]
+                    ],
+                    [
+                        'type' => 'comments',
+                        'id' => '3',
+                        'attributes' => [
+                            'content' => 'comment content 2...'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'links' => [
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/comments/3/author',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/comments/3/relationships/author'
+                                ],
+                                'data' => [
+                                    'type' => 'users',
+                                    'id' => '7'
+                                ]
+                            ]
+                        ],
+                        'links' => [
+                            'self' => 'http://kooomo-code-challenge.test/api/v1/comments/3'
+                        ]
+                    ]
+                ]
+            ]);
+    }
 }
