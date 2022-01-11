@@ -20,6 +20,7 @@ class Post extends Model
      * @var array
      */
     protected $casts = [
+        'is_published' => 'boolean',
     ];
 
     /**
