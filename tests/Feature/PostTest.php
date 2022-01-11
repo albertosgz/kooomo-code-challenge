@@ -37,6 +37,7 @@ class PostTest extends TestCase
                 'username' => 'foobar',
             ]), 'author')
             ->sequence(fn ($sequence) => [
+                'id' => $sequence->index+1,
                 'title' => 'Title '.$sequence->index,
                 'content' => 'Content '.$sequence->index,
                 'slug' => 'slug-'.$sequence->index,
@@ -63,14 +64,42 @@ class PostTest extends TestCase
                 'data' => [
                     [
                         'type' => 'posts',
-                        'id' => '2',
+                        'id' => '1',
                         'links' => [
-                            'self' => self::URL_HOSTNAME . '/api/v1/posts/2',
+                            'self' => self::URL_HOSTNAME . '/api/v1/posts/1',
                         ],
                         'attributes' => [
                             'title' => 'Title 0',
                             'slug' => 'slug-0',
                             'content' => 'Content 0',
+                            'createdAt' => '2022-01-01T00:00:01.000000Z',
+                            'updatedAt' => '2022-01-01T00:00:01.000000Z',
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/author',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/author',
+                                ],
+                            ],
+                            'comments' => [
+                                'links' => [
+                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
+                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
+                                ],
+                            ]
+                        ]
+                    ],
+                    [
+                        'type' => 'posts',
+                        'id' => '2',
+                        'links' => [
+                            'self' => self::URL_HOSTNAME . '/api/v1/posts/2',
+                        ],
+                        'attributes' => [
+                            'title' => 'Title 1',
+                            'slug' => 'slug-1',
+                            'content' => 'Content 1',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
                         ],
@@ -88,34 +117,6 @@ class PostTest extends TestCase
                                 ],
                             ]
                         ]
-                    ],
-                    [
-                        'type' => 'posts',
-                        'id' => '3',
-                        'links' => [
-                            'self' => self::URL_HOSTNAME . '/api/v1/posts/3',
-                        ],
-                        'attributes' => [
-                            'title' => 'Title 1',
-                            'slug' => 'slug-1',
-                            'content' => 'Content 1',
-                            'createdAt' => '2022-01-01T00:00:01.000000Z',
-                            'updatedAt' => '2022-01-01T00:00:01.000000Z',
-                        ],
-                        'relationships' => [
-                            'author' => [
-                                'links' => [
-                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/3/author',
-                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/3/relationships/author',
-                                ],
-                            ],
-                            'comments' => [
-                                'links' => [
-                                    'related' => self::URL_HOSTNAME . '/api/v1/posts/3/comments',
-                                    'self' => self::URL_HOSTNAME . '/api/v1/posts/3/relationships/comments',
-                                ],
-                            ]
-                        ]
                     ]
                 ],
             ]);
@@ -124,6 +125,7 @@ class PostTest extends TestCase
         $post = Post::factory()
             ->for(User::factory(), 'author')
             ->sequence(fn ($sequence) => [
+                'id' => $sequence->index+1,
                 'title' => 'Title '.$sequence->index,
                 'content' => 'Content '.$sequence->index,
                 'slug' => 'slug-'.$sequence->index,
@@ -137,11 +139,11 @@ class PostTest extends TestCase
         logger($post);
 
         $this->assertDatabaseHas('posts', [
-            'id' => 4,
+            'id' => 1,
         ]);
 
 
-        $this->getJson('/api/v1/posts/4')
+        $this->getJson('/api/v1/posts/1')
             ->assertStatus(200)
             ->assertExactJson([
                 'jsonapi' => [
@@ -149,9 +151,9 @@ class PostTest extends TestCase
                 ],
                 'data' => [
                     'type' => 'posts',
-                    'id' => '4',
+                    'id' => '1',
                     'links' => [
-                        'self' => self::URL_HOSTNAME . '/api/v1/posts/4',
+                        'self' => self::URL_HOSTNAME . '/api/v1/posts/1',
                     ],
                     'attributes' => [
                         'title' => 'Title 0',
@@ -163,20 +165,20 @@ class PostTest extends TestCase
                     'relationships' => [
                         'author' => [
                             'links' => [
-                                'related' => self::URL_HOSTNAME . '/api/v1/posts/4/author',
-                                'self' => self::URL_HOSTNAME . '/api/v1/posts/4/relationships/author',
+                                'related' => self::URL_HOSTNAME . '/api/v1/posts/1/author',
+                                'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/author',
                             ],
                         ],
                         'comments' => [
                             'links' => [
-                                'related' => self::URL_HOSTNAME . '/api/v1/posts/4/comments',
-                                'self' => self::URL_HOSTNAME . '/api/v1/posts/4/relationships/comments',
+                                'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
+                                'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
                             ],
                         ]
                     ]
                 ],
                 'links' => [
-                    'self' =>  self::URL_HOSTNAME . '/api/v1/posts/4',
+                    'self' =>  self::URL_HOSTNAME . '/api/v1/posts/1',
                 ]
             ]);
     }
@@ -185,11 +187,13 @@ class PostTest extends TestCase
         $posts = Post::factory()
             ->count(1)
             ->for(User::factory()->state([
+                'id' => 1,
                 'email' => 'test@test.com',
                 'name' => 'foo bar',
                 'username' => 'foobar',
             ]), 'author')
             ->create([
+                'id' => 1,
                 'title' => 'Title 1',
                 'is_published' => true,
             ]);
@@ -203,7 +207,7 @@ class PostTest extends TestCase
             'title' => 'Title 1',
         ]);
 
-        $this->getJson('/api/v1/posts/5/author')
+        $this->getJson('/api/v1/posts/1/author')
             ->assertStatus(200)
             ->assertJson([
                 'jsonapi' => [
@@ -211,9 +215,9 @@ class PostTest extends TestCase
                 ],
                 'data' => [
                     'type' => 'users',
-                    'id' => '4',
+                    'id' => '1',
                     'links' => [
-                        'self' => self::URL_HOSTNAME . '/api/v1/users/4',
+                        'self' => self::URL_HOSTNAME . '/api/v1/users/1',
                     ],
                     'attributes' => [
                         'name' => 'foo bar',
@@ -223,8 +227,8 @@ class PostTest extends TestCase
                     ],
                 ],
                 'links' => [
-                    'related' => self::URL_HOSTNAME . '/api/v1/posts/5/author',
-                    'self' => self::URL_HOSTNAME . '/api/v1/posts/5/relationships/author',
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/author',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/author',
                 ],
             ]);
     }
@@ -235,6 +239,7 @@ class PostTest extends TestCase
         $post = Post::factory()
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'is_published' => true,
             ]);
 
@@ -250,7 +255,7 @@ class PostTest extends TestCase
             'content' => 'comment content...',
         ]);
 
-        $this->getJson('/api/v1/posts/6/comments')
+        $this->getJson('/api/v1/posts/1/comments')
             ->assertStatus(200)
             ->assertJson([
                 'jsonapi' => [
@@ -269,8 +274,8 @@ class PostTest extends TestCase
                     ]
                 ],
                 'links' => [
-                    'related' => self::URL_HOSTNAME . '/api/v1/posts/6/comments',
-                    'self' => self::URL_HOSTNAME . '/api/v1/posts/6/relationships/comments',
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
                 ]
             ]);
     }
@@ -281,6 +286,7 @@ class PostTest extends TestCase
         $post = Post::factory()
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'is_published' => true,
             ]);
 
@@ -296,7 +302,7 @@ class PostTest extends TestCase
             'content' => 'comment content 2...',
         ]);
 
-        $this->getJson('/api/v1/posts/7/relationships/comments')
+        $this->getJson('/api/v1/posts/1/relationships/comments')
             ->assertStatus(200)
             ->assertJson([
                 'jsonapi' => [
@@ -309,8 +315,8 @@ class PostTest extends TestCase
                     ]
                 ],
                 'links' => [
-                    'related' => self::URL_HOSTNAME . '/api/v1/posts/7/comments',
-                    'self' => self::URL_HOSTNAME . '/api/v1/posts/7/relationships/comments',
+                    'related' => self::URL_HOSTNAME . '/api/v1/posts/1/comments',
+                    'self' => self::URL_HOSTNAME . '/api/v1/posts/1/relationships/comments',
                 ]
             ]);
     }
@@ -318,12 +324,14 @@ class PostTest extends TestCase
     public function test_including_comments_and_author_getting_post_when_are_published() {
 
         $user = User::factory()->create([
+            'id' => 1,
             'username' => 'foobar',
             'name' => 'foo bar',
         ]);
         $post = Post::factory()
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'is_published' => true,
                 'slug' => 'slug-post',
                 'title' => 'Post Title',
@@ -334,6 +342,7 @@ class PostTest extends TestCase
             ->for($post)
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'content' => 'comment content 2...',
                 'is_published' => true,
             ]);
@@ -342,7 +351,7 @@ class PostTest extends TestCase
             'content' => 'comment content 2...',
         ]);
 
-        $this->getJson('/api/v1/posts/8?include=author,comments.author')
+        $this->getJson('/api/v1/posts/1?include=author,comments.author')
             ->assertStatus(200)
             ->assertJson([
                 'jsonapi' => [
@@ -350,7 +359,7 @@ class PostTest extends TestCase
                 ],
                 'data' => [
                     'type' => 'posts',
-                    'id' => '8',
+                    'id' => '1',
                     'attributes' => [
                         'createdAt' => $post->created_at->jsonSerialize(),
                         'updatedAt' => $post->updated_at->jsonSerialize(),
@@ -362,7 +371,7 @@ class PostTest extends TestCase
                 'included' =>[
                     [
                         'type' => 'users',
-                        'id' => '7',
+                        'id' => '1',
                         'attributes' => [
                             'username' => 'foobar',
                             'name' => 'foo bar'
@@ -370,41 +379,41 @@ class PostTest extends TestCase
                         'relationships' => [
                             'posts' => [
                                 'links' => [
-                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/7/posts',
-                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/7/relationships/posts'
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/1/posts',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/1/relationships/posts'
                                 ]
                             ],
                             'comments' => [
                                 'links' => [
-                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/7/comments',
-                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/7/relationships/comments'
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/users/1/comments',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/users/1/relationships/comments'
                                 ]
                             ]
                         ],
                         'links' => [
-                            'self' => 'http://kooomo-code-challenge.test/api/v1/users/7'
+                            'self' => 'http://kooomo-code-challenge.test/api/v1/users/1'
                         ]
                     ],
                     [
                         'type' => 'comments',
-                        'id' => '3',
+                        'id' => '1',
                         'attributes' => [
                             'content' => 'comment content 2...'
                         ],
                         'relationships' => [
                             'author' => [
                                 'links' => [
-                                    'related' => 'http://kooomo-code-challenge.test/api/v1/comments/3/author',
-                                    'self' => 'http://kooomo-code-challenge.test/api/v1/comments/3/relationships/author'
+                                    'related' => 'http://kooomo-code-challenge.test/api/v1/comments/1/author',
+                                    'self' => 'http://kooomo-code-challenge.test/api/v1/comments/1/relationships/author'
                                 ],
                                 'data' => [
                                     'type' => 'users',
-                                    'id' => '7'
+                                    'id' => '1'
                                 ]
                             ]
                         ],
                         'links' => [
-                            'self' => 'http://kooomo-code-challenge.test/api/v1/comments/3'
+                            'self' => 'http://kooomo-code-challenge.test/api/v1/comments/1'
                         ]
                     ]
                 ]
