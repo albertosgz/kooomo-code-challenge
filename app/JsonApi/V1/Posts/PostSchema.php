@@ -3,6 +3,8 @@
 namespace App\JsonApi\V1\Posts;
 
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
@@ -71,4 +73,19 @@ class PostSchema extends Schema
         return PagePagination::make();
     }
 
+    /**
+     * Build an index query for this resource.
+     *
+     * @param Request|null $request
+     * @param Builder $query
+     * @return Builder
+     */
+    public function indexQuery(?Request $request, Builder $query): Builder
+    {
+        $user = optional($request)->user();
+        if ($user) {
+            return $query;
+        }
+        return $query->where('is_published', true);
+    }
 }
