@@ -247,6 +247,7 @@ class PostTest extends TestCase
             ->for($post)
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'content' => 'comment content...',
                 'is_published' => true,
             ]);
@@ -294,6 +295,7 @@ class PostTest extends TestCase
             ->for($post)
             ->for($user, 'author')
             ->create([
+                'id' => 1,
                 'content' => 'comment content 2...',
                 'is_published' => true,
             ]);
@@ -311,7 +313,7 @@ class PostTest extends TestCase
                 'data' => [
                     [
                         'type' => 'comments',
-                        'id' => '2',
+                        'id' => '1',
                     ]
                 ],
                 'links' => [
