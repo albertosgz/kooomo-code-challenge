@@ -147,4 +147,69 @@ class PostPaginatedTest extends TestCase
 
         $response->assertFetchedMany($posts->slice(0, 10));
     }
+
+    public function test_get_last_5_comments_and_total_in_public_index()
+    {
+        $user = User::factory();
+        $posts = Post::factory()
+            ->count(20)
+            ->for($user, 'author')
+            ->create(['is_published' => true]);
+
+        $comments = Comment::factory()
+            ->count(7)
+            ->for($user, 'author')
+            ->for($posts->first())
+            ->sequence(fn($sequence) => [
+                'id' => $sequence->index + 1,
+                'content' => 'Content ' . $sequence->index,
+                'created_at' => '2001-01-01 00:00:0' . ($sequence->index+1),
+                'updated_at' => '2001-01-01 00:00:01',
+                'is_published' => $sequence->index < 5,
+            ])
+            ->create();
+
+        $commentNoPublished = $comments->first(fn ($comment) => !$comment->is_published);
+
+        $response = $this
+            ->jsonApi()
+            ->expects('posts')
+            ->page(['number' => 1, 'size' => 2])
+            ->get('/api/v1/posts');
+
+        $response
+            ->assertFetchedMany($posts->slice(0, 2))
+            ->assertJsonMissingExact([
+                'type' => 'comments',
+                'id' => (string) $commentNoPublished->id,
+            ]);
+
+        $responseObject = json_decode($response->getContent(), true);
+        $indexMetaJson = $responseObject['data'][0]['meta'];
+        $metaJsonExpected = [
+            'total_comments' => 5,
+            'last_comments' => $comments
+                ->filter(fn ($comment) => $comment->is_published)
+                ->map(fn ($comment, $index) => [
+                    'id' => $index + 1,
+                    'type' => 'comments',
+                    'attributes' => [
+                        'content' => 'Content ' . $index,
+                        'createdAt' => '2001-01-01T00:00:0' . ($index+1) . '.000000Z',
+                        'updatedAt' => '2001-01-01T00:00:01.000000Z',
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'links' => [
+                                'related' => self::URL_HOSTNAME . '/api/v1/comments/'.$comment->getRouteKey().'/author',
+                                'self' => self::URL_HOSTNAME . '/api/v1/comments/'.$comment->getRouteKey().'/relationships/author'
+                            ]
+                        ]
+                    ]
+                ])
+                ->toArray(),
+        ];
+
+        $this->assertEquals(json_encode($indexMetaJson), json_encode($metaJsonExpected));
+    }
 }
