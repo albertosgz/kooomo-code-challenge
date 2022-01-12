@@ -4,6 +4,7 @@ namespace App\JsonApi\V1;
 
 use App\JsonApi\V1\Comments\CommentPublishedScope;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
 class Server extends BaseServer
@@ -23,6 +24,7 @@ class Server extends BaseServer
      */
     public function serving(): void
     {
+        Auth::shouldUse('sanctum'); // https://laraveljsonapi.io/docs/1.0/tutorial/05-creating-resources.html#authentication
         Comment::addGlobalScope(new CommentPublishedScope());
     }
 
@@ -36,7 +38,6 @@ class Server extends BaseServer
         return [
             Posts\PostSchema::class,
             Comments\CommentSchema::class,
-            Posts\PostSchema::class,
             Users\UserSchema::class,
         ];
     }
