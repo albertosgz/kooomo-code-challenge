@@ -82,7 +82,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        //
+        return $user->is($post->author);
     }
 
     /**

@@ -138,8 +138,6 @@ class PostTest extends TestCase
                 'is_published' => true,
             ]);
 
-        logger($post);
-
         $this->assertDatabaseHas('posts', [
             'id' => 1,
         ]);
