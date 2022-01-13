@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
+use LaravelJsonApi\Eloquent\Fields\Boolean;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsTo;
@@ -48,6 +49,7 @@ class PostSchema extends Schema
             Str::make('content'),
             Str::make('slug'),
             Str::make('title')->sortable(),
+            Boolean::make('is_published'),
         ];
     }
 

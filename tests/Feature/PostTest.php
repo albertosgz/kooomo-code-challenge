@@ -73,6 +73,7 @@ class PostTest extends TestCase
                             'slug' => 'slug-0',
                             'content' => 'Content 0',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
+                            'is_published' => true,
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
                         ],
                         'relationships' => [
@@ -101,6 +102,7 @@ class PostTest extends TestCase
                             'slug' => 'slug-1',
                             'content' => 'Content 1',
                             'createdAt' => '2022-01-01T00:00:01.000000Z',
+                            'is_published' => true,
                             'updatedAt' => '2022-01-01T00:00:01.000000Z',
                         ],
                         'relationships' => [
@@ -160,6 +162,7 @@ class PostTest extends TestCase
                         'slug' => 'slug-0',
                         'content' => 'Content 0',
                         'createdAt' => '2022-01-01T00:00:01.000000Z',
+                        'is_published' => true,
                         'updatedAt' => '2022-01-01T00:00:01.000000Z',
                     ],
                     'relationships' => [
