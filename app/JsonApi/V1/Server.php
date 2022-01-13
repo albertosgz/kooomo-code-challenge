@@ -4,6 +4,7 @@ namespace App\JsonApi\V1;
 
 use App\JsonApi\V1\Comments\CommentPublishedScope;
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
 
@@ -26,6 +27,7 @@ class Server extends BaseServer
     {
         Auth::shouldUse('sanctum'); // https://laraveljsonapi.io/docs/1.0/tutorial/05-creating-resources.html#authentication
         Comment::addGlobalScope(new CommentPublishedScope());
+        Post::creating(static fn(Post $post) => $post->author()->associate(Auth::user()));
     }
 
     /**

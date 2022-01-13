@@ -69,7 +69,8 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        //
+        // Enough to be authenticated
+        return true;
     }
 
     /**
