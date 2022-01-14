@@ -28,6 +28,7 @@ class Server extends BaseServer
         Auth::shouldUse('sanctum'); // https://laraveljsonapi.io/docs/1.0/tutorial/05-creating-resources.html#authentication
         Comment::addGlobalScope(new CommentPublishedScope());
         Post::creating(static fn(Post $post) => $post->author()->associate(Auth::user()));
+        Comment::creating(static fn(Comment $comment) => $comment->author()->associate(Auth::user()));
     }
 
     /**

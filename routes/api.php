@@ -27,4 +27,10 @@ JsonApiRoute::server('v1')->prefix('v1')->resources(function ($server) {
         ->relationships(function ($relations) {
             $relations->hasMany('comments')->readOnly();
         });
+    $server->resource('comments', JsonApiController::class)
+        ->only('store', 'update', 'destroy')
+        ->relationships(function ($relations) {
+            $relations->hasOne('author')->readOnly();
+            $relations->hasOne('post')->readOnly();
+        });
 });

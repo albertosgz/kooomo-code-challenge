@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
+use LaravelJsonApi\Eloquent\Fields\Boolean;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsTo;
@@ -36,7 +37,9 @@ class CommentSchema extends Schema
             DateTime::make('createdAt')->sortable()->readOnly(),
             DateTime::make('updatedAt')->sortable()->readOnly(),
             Str::make('content'),
+            Boolean::make('is_published'),
             BelongsTo::make('author')->type('users')->readOnly(),
+            BelongsTo::make('post')->readOnlyOnUpdate(),
         ];
     }
 
