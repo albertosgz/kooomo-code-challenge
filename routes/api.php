@@ -22,4 +22,9 @@ JsonApiRoute::server('v1')->prefix('v1')->resources(function ($server) {
             $relations->hasOne('author')->readOnly();
             $relations->hasMany('comments')->readOnly();
         });
+    $server->resource('users', JsonApiController::class)
+        ->only('show')
+        ->relationships(function ($relations) {
+            $relations->hasMany('comments')->readOnly();
+        });
 });
