@@ -21,9 +21,10 @@ class PostPaginatedTest extends TestCase
      */
     public function test_cannot_see_not_publish_posts()
     {
+        $user = User::factory()->create();
         $posts = Post::factory()
             ->count(2)
-            ->for(User::factory(), 'author')
+            ->for($user, 'author')
             ->sequence(fn ($sequence) => [
                 'is_published' => (bool) $sequence->index,
             ])
