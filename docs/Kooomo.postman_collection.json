@@ -1,0 +1,396 @@
+{
+	"info": {
+		"_postman_id": "bc9a7e0d-06cd-4e76-88be-ac360ab65568",
+		"name": "Kooomo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List Posts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/v1/posts?page[number]=1&page[size]=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "page[number]",
+							"value": "1"
+						},
+						{
+							"key": "page[size]",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Comments for a given Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/v1/posts/107/comments?page[number]=1&page[size]=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"107",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "page[number]",
+							"value": "1"
+						},
+						{
+							"key": "page[size]",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Comments for a given User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/api/v1/users/68/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"68",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/api/v1/posts/107",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"107"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"type\": \"posts\",\n        \"attributes\": {\n            \"content\": \"My first content\",\n            \"slug\": \"hello-world\",\n            \"title\": \"Hello world\",\n            \"is_published\": true\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"type\": \"comments\",\n        \"attributes\": {\n            \"content\": \"My first comment content\",\n            \"is_published\": true\n        },\n        \"relationships\": {\n            \"post\": {\n                \"data\": {\n                    \"type\": \"posts\",\n                    \"id\": \"107\"\n                }\n            }\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"type\": \"posts\",\n        \"id\": \"107\",\n        \"attributes\": {\n            \"content\": \"My updated content\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/posts/107",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"107"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\": {\n        \"type\": \"comments\",\n        \"id\": \"135\",\n        \"attributes\": {\n            \"content\": \"My first updated content\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost/api/v1/comments/135",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"135"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/api/v1/posts/107",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"posts",
+						"107"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "16|bh14v0zS55NzrPHlzbxCz3ATXMQstdVGZ1354rJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/api/v1/comments/135",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"135"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

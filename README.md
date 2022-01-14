@@ -1,66 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Koomo Code Challenge
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About code
 
-## About Laravel
+This project aims to cover all the requirements of the Koomo Code Challenge.
+Is based on Laravel and the [Laravel Json Api](https://laraveljsonapi.io/) package, 
+to support as much as possible the [Json Api](https://jsonapi.org/) specification. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Install
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Once pull it, install all dependencies:
+```shell
+$ ./composer install
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Get up and run all containers:
+```shell
+$ ./vendor/bin/sail up
+```
 
-## Learning Laravel
+Setup DB:
+```shell
+$ ./vendor/bin/sail artisan migrate
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tests
+Run tests:
+```shell
+$ ./vendor/bin/sail test
+```
+Remember to run the tests before seed the DB. Otherwise, all data in DB will be lost.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Seed Database
 
-## Laravel Sponsors
+Filling fake data in DB:
+```shell
+$ ./vendor/bin/sail test
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Making endpoints query
 
-### Premium Partners
+### Curl
+Make the first query with next command to check all is ok:
+```shell
+$ curl "http://localhost/api/v1/posts?page[number]=1&page[size]=5" -H "Content-Type: application/vnd.api+json"
+```
+You should see something like this:
+```json
+{
+  "meta": {
+    "page": {
+      "currentPage": 1,
+      "from": 1,
+      "lastPage": 11,
+      "perPage": 1,
+      "to": 1,
+      "total": 11
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "links": {
+    "first": "http://localhost/api/v1/posts?page%5Bnumber%5D=1&page%5Bsize%5D=1",
+    "last": "http://localhost/api/v1/posts?page%5Bnumber%5D=11&page%5Bsize%5D=1",
+    "next": "http://localhost/api/v1/posts?page%5Bnumber%5D=2&page%5Bsize%5D=1"
+  },
+  "data": [
+    {
+      "type": "posts",
+      "id": "107",
+      "attributes": {
+        "createdAt": "2022-01-14T16:32:12.000000Z",
+        "updatedAt": "2022-01-14T16:32:12.000000Z",
+        "content": "Qui aut voluptatem alias voluptatem quibusdam sunt. Magni laudantium maiores eos voluptatum quas quae. Officiis debitis et architecto dolor odit praesentium.",
+        "slug": "tempora-consequatur-quod-sapiente-temporibus-sit-impedit",
+        "title": "Aut eaque minus cupiditate esse ut dolor culpa.",
+        "is_published": true
+      },
+      "relationships": {
+        "author": {
+          "links": {
+            "related": "http://localhost/api/v1/posts/107/author",
+            "self": "http://localhost/api/v1/posts/107/relationships/author"
+          }
+        },
+        "comments": {
+          "links": {
+            "related": "http://localhost/api/v1/posts/107/comments",
+            "self": "http://localhost/api/v1/posts/107/relationships/comments"
+          }
+        }
+      },
+      "links": {
+        "self": "http://localhost/api/v1/posts/107"
+      }
+    }
+  ]
+}
+```
+### Postman
+A collection of example requests is available to import into a postman program.
+The file `Kooomo.postman_collection.json` can be found in `/docs` folder.
+Remember to setup the Bearer Token in the authorization tab in order to make use of
+protected endpoints. You can find a Bearer token when running the next command `kooomo:generateUsersTokens`.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
+## Authentication 
+In order to make use of protected endpoints, a bearer token is needed.
+To generate new tokens and see its value, run:
+```shell
+$ vendor/bin/sail artisan kooomo:generateUsersTokens
+```
 
-## Contributing
+Try to create Post with one of the token listed:
+```shell
+curl -X POST http://localhost/api/v1/posts 
+  -H 'Content-Type: application/vnd.api+json' 
+  -H 'Authorization: Bearer 34|rJAOmrsApUhQlg1lBnfY7K8Fv0vdf3Vei07XP9Gr' 
+  -d '{"data":{"type":"posts","attributes":{"content":"My first content","slug":"hello-world","title":"Hello World","is_published":true}}}'
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Should see something like this:
+```json
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "links": {
+    "self": "http://localhost/api/v1/posts/206"
+  },
+  "data": {
+    "type": "posts",
+    "id": "206",
+    "attributes": {
+      "createdAt": "2022-01-14T17:20:46.000000Z",
+      "updatedAt": "2022-01-14T17:20:46.000000Z",
+      "content": "My first content",
+      "slug": "hello-world",
+      "title": "Hello World",
+      "is_published": true
+    },
+    "relationships": {
+      "author": {
+        "links": {
+          "related": "http://localhost/api/v1/posts/206/author",
+          "self": "http://localhost/api/v1/posts/206/relationships/author"
+        }
+      },
+      "comments": {
+        "links": {
+          "related": "http://localhost/api/v1/posts/206/comments",
+          "self": "http://localhost/api/v1/posts/206/relationships/comments"
+        }
+      }
+    },
+    "links": {
+      "self": "http://localhost/api/v1/posts/206"
+    }
+  }
+}
+```
 
-## Code of Conduct
+## Known Bugs
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Access to unpublished comments through user endpoints
 
-## Security Vulnerabilities
+There is a security bug pending to be fixed, which allows to see a published comment related with a 
+unpublished post, through users endpoint.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Check test `test_cannot_see_comments_of_unpublished_post` to know more about it. 
