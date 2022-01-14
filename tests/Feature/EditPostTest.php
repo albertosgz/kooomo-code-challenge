@@ -145,4 +145,31 @@ class EditPostTest extends TestCase
             ->patch('/api/v1/posts/' . $post->getRouteKey())
             ->assertStatus(422);
     }
+
+    /**
+     * @group post
+     */
+    public function test_is_published_on_post_cannot_be_null()
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()
+            ->for($user, 'author')
+            ->create();
+
+        $data = [
+            'type' => 'posts',
+            'id' => (string) $post->getRouteKey(),
+            'attributes' => [
+                'is_published' => null,
+            ],
+        ];
+
+        $response = $this
+            ->actingAs($user)
+            ->jsonApi()
+            ->expects('posts')
+            ->withData($data)
+            ->patch('/api/v1/posts/' . $post->getRouteKey())
+            ->assertStatus(422);
+    }
 }

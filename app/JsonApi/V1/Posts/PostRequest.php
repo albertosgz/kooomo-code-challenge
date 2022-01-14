@@ -25,7 +25,7 @@ class PostRequest extends ResourceRequest
 
         return [
             'content' => ['required', 'string'],
-            'is_published' => ['nullable', 'boolean'],
+            'is_published' => ['boolean'],
             'slug' => ['required', 'string', $uniqueSlug],
             'tags' => JsonApiRule::toMany(),
             'title' => ['required', 'string'],
