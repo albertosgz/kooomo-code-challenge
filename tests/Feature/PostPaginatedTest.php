@@ -16,6 +16,9 @@ class PostPaginatedTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_cannot_see_not_publish_posts()
     {
         $posts = Post::factory()
@@ -39,6 +42,9 @@ class PostPaginatedTest extends TestCase
         $response->assertFetchedMany($publishedPosts);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_see_not_publish_included_comments()
     {
         $user = User::factory();
@@ -81,6 +87,9 @@ class PostPaginatedTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_see_not_publish_related_comments()
     {
         $user = User::factory();
@@ -118,6 +127,9 @@ class PostPaginatedTest extends TestCase
     }
 
 
+    /**
+     * @group post
+     */
     public function test_get_second_page()
     {
         $user = User::factory();
@@ -148,6 +160,9 @@ class PostPaginatedTest extends TestCase
         $response->assertFetchedMany($posts->slice(0, 10));
     }
 
+    /**
+     * @group post
+     */
     public function test_get_last_5_comments_and_total_in_public_index()
     {
         $user = User::factory();

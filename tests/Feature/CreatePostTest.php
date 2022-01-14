@@ -16,6 +16,9 @@ class CreatePostTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_cannot_create_post_when_not_logged_in()
     {
         $this
@@ -36,6 +39,9 @@ class CreatePostTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     */
     public function test_able_to_create_post_when_logged_in()
     {
         $user = User::factory()->create();
@@ -75,6 +81,9 @@ class CreatePostTest extends TestCase
         ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_create_post_with_repeated_slug()
     {
         $user = User::factory()->create();

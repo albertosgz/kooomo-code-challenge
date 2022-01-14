@@ -16,6 +16,9 @@ class EditPostTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_cannot_edit_post_when_not_logged_in()
     {
         $user = User::factory()->create();
@@ -41,6 +44,9 @@ class EditPostTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     */
     public function test_able_to_edit_post_when_logged_in_and_author()
     {
         $user = User::factory()->create();
@@ -78,6 +84,9 @@ class EditPostTest extends TestCase
         ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_edit_post_when_logged_in_and_different_author()
     {
         $user = User::factory()->create();
@@ -105,6 +114,9 @@ class EditPostTest extends TestCase
             ->assertStatus(403);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_edit_post_with_repeated_slug()
     {
         $user = User::factory()->create();

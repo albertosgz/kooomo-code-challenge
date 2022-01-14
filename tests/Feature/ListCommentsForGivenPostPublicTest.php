@@ -16,6 +16,10 @@ class ListCommentsForGivenPostPublicTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_see_comments_of_public_post()
     {
         $user = User::factory()->create();
@@ -36,6 +40,10 @@ class ListCommentsForGivenPostPublicTest extends TestCase
             ->assertFetchedMany($comments);
     }
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_see_comments_of_public_post_paginated()
     {
         $user = User::factory()->create();
@@ -56,6 +64,10 @@ class ListCommentsForGivenPostPublicTest extends TestCase
             ->assertFetchedMany($comments->slice(2));
     }
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_cannot_see_unpublished_comments_of_public_post()
     {
         $user = User::factory()->create();
@@ -79,6 +91,10 @@ class ListCommentsForGivenPostPublicTest extends TestCase
             ->assertFetchedMany($comments->slice(5));
     }
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_cannot_see_comments_of_protected_post()
     {
         $user = User::factory()->create();
@@ -98,6 +114,10 @@ class ListCommentsForGivenPostPublicTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_cannot_see_comments_from_other_public_post()
     {
         $user = User::factory()->create();

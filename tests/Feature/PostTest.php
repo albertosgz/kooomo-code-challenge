@@ -16,18 +16,27 @@ class PostTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_default_post_route_available()
     {
         $response = $this->get('/api/v1/posts');
         $response->assertStatus(200);
     }
 
+    /**
+     * @group post
+     */
     public function test_first_post_not_available_when_db_empty()
     {
         $response = $this->get('/api/v1/posts/1');
         $response->assertStatus(404);
     }
 
+    /**
+     * @group post
+     */
     public function test_get_index_of_posts_if_published() {
         Post::factory()
             ->count(2)
@@ -123,6 +132,9 @@ class PostTest extends TestCase
                 ],
             ]);
     }
+    /**
+     * @group post
+     */
     public function test_read_a_post_when_is_published() {
         $post = Post::factory()
             ->for(User::factory(), 'author')
@@ -184,6 +196,9 @@ class PostTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_get_user_relationship_for_post_when_is_published() {
         $posts = Post::factory()
             ->count(1)
@@ -234,6 +249,9 @@ class PostTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_get_comment_relationship_for_post_when_is_published() {
 
         $user = User::factory()->create();
@@ -282,6 +300,9 @@ class PostTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_get_comment_relationship_for_post_when_is_published_has_no_attributes() {
 
         $user = User::factory()->create();
@@ -324,6 +345,9 @@ class PostTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_including_comments_and_author_getting_post_when_are_published() {
 
         $user = User::factory()->create([

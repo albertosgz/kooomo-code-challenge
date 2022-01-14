@@ -16,6 +16,9 @@ class ViewPostPublicTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_cannot_view_not_published_post_when_not_logged_in()
     {
         $user = User::factory()->create();
@@ -31,6 +34,9 @@ class ViewPostPublicTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     */
     public function test_able_to_view_not_published_post_when_logged_in()
     {
         $user = User::factory()->create();
@@ -49,6 +55,9 @@ class ViewPostPublicTest extends TestCase
             ->assertFetchedOne($post);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_view_comments_of_not_published_post_when_not_logged_in()
     {
         $user = User::factory()->create();
@@ -70,6 +79,9 @@ class ViewPostPublicTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     */
     public function test_view_comments_of_not_published_post_when_logged_in()
     {
         $user = User::factory()->create();

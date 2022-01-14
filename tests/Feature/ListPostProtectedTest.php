@@ -16,6 +16,9 @@ class ListPostProtectedTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_see_on_published_posts_when_not_logged_in()
     {
         $user = User::factory()->create();
@@ -41,6 +44,9 @@ class ListPostProtectedTest extends TestCase
             ->assertFetchedMany($postPublished);
     }
 
+    /**
+     * @group post
+     */
     public function test_see_all_posts_when_logged_in()
     {
         $user = User::factory()->create();
@@ -67,6 +73,9 @@ class ListPostProtectedTest extends TestCase
             ->assertFetchedMany($posts);
     }
 
+    /**
+     * @group post
+     */
     public function test_see_all_posts_and_related_comments_when_logged_in()
     {
         $user = User::factory()->create();
@@ -110,6 +119,9 @@ class ListPostProtectedTest extends TestCase
             ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_see_published_posts_and_related_published_comments_when_not_logged_in()
     {
         $user = User::factory()->create();

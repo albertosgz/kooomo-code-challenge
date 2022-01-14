@@ -16,6 +16,10 @@ class ListCommentsForGivenPostProtectedTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_see_comments_of_protected_post()
     {
         $user = User::factory()->create();
@@ -40,6 +44,10 @@ class ListCommentsForGivenPostProtectedTest extends TestCase
             ->assertFetchedMany($comments);
     }
 
+    /**
+     * @group post
+     * @group comment
+     */
     public function test_see_comments_of_protected_post_paginated()
     {
         $user = User::factory()->create();

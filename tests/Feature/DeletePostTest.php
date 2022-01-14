@@ -16,6 +16,9 @@ class DeletePostTest extends TestCase
 
     const URL_HOSTNAME = 'http://kooomo-code-challenge.test';
 
+    /**
+     * @group post
+     */
     public function test_cannot_delete_post_when_not_logged_in()
     {
         $user = User::factory()->create();
@@ -28,6 +31,9 @@ class DeletePostTest extends TestCase
             ->assertStatus(401);
     }
 
+    /**
+     * @group post
+     */
     public function test_able_to_delete_post_when_logged_in_and_author()
     {
         $user = User::factory()->create();
@@ -45,6 +51,9 @@ class DeletePostTest extends TestCase
         ]);
     }
 
+    /**
+     * @group post
+     */
     public function test_cannot_delete_post_when_logged_in_and_different_author()
     {
         $user = User::factory()->create();
