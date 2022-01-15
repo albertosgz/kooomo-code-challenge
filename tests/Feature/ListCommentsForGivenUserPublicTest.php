@@ -97,16 +97,6 @@ class ListCommentsForGivenUserPublicTest extends TestCase
      */
     public function test_cannot_see_comments_of_unpublished_post()
     {
-        /**
-         * There is known bug: is possible to see published comments of unpublished posts through user endpoint.
-         * One solution would be setting the filter as global scope in Comments. However, implies a sql join with posts,
-         * which slow down the queries for all requests of list of comments.
-         * This needs to be fixed.
-         */
-        $this->markTestIncomplete(
-            'Is a known bug, where comments are not filtered by its published post, through user endpoint.'
-        );
-
         $user = User::factory()->create();
 
         $post = Post::factory()
@@ -124,7 +114,7 @@ class ListCommentsForGivenUserPublicTest extends TestCase
         $commentsOfPublishedPost = Comment::factory()
             ->count(1)
             ->for($user, 'author')
-            ->for($post)
+            ->for($otherPost)
             ->create(['is_published' => true]);
 
         $this

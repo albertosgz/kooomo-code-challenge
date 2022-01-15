@@ -159,12 +159,3 @@ Should see something like this:
   }
 }
 ```
-
-## Known Bugs
-
-### Access to unpublished comments through user endpoints
-
-There is a security bug pending to be fixed, which allows to see a published comment related with a 
-unpublished post, through users endpoint.
-
-Check test `test_cannot_see_comments_of_unpublished_post` to know more about it. 

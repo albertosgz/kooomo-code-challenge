@@ -4,6 +4,7 @@ namespace App\JsonApi\V1\Comments;
 
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\Boolean;
@@ -80,4 +81,25 @@ class CommentSchema extends Schema
         }
         return $query->where('is_published', true);
     }
+
+    /**
+     * Build a "relatable" query for this resource.
+     *
+     * @param Request|null $request
+     * @param Relation $query
+     * @return Relation
+     */
+    public function relatableQuery(?Request $request, Relation $query): Relation
+    {
+        if (!$request->user()) {
+            return $query
+                ->select('comments.*')
+                ->join('posts', 'comments.post_id', '=', 'posts.id')
+                ->where('posts.is_published', '=', true)
+                ->where('comments.is_published', '=', true);
+        }
+        return $query;
+
+    }
+
 }
