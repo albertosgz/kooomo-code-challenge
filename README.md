@@ -27,7 +27,8 @@ Get up and run all containers:
 ```shell
 $ ./vendor/bin/sail up
 ```
-Since the Docker output takes the terminal. Another terminal window is needed.
+By default, Docker output takes the terminal. Another terminal window is needed.
+Another option is to boot up Sail in detach mode with `-d` parameter.
 
 ### Database
 
@@ -43,6 +44,7 @@ If you need to connect into it (the Mysql container), the connection information
 The previous data is available on `.env` file.
 
 Once the schema is created, open another terminal, and run next command to migrate the database:
+Once the schema is created run next command to migrate the database:
 ```shell
 $ ./vendor/bin/sail artisan migrate
 ```
