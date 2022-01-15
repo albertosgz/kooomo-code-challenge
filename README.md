@@ -34,7 +34,7 @@ Remember to run the tests before seed the DB. Otherwise, all data in DB will be 
 
 Filling fake data in DB:
 ```shell
-$ ./vendor/bin/sail test
+$ ./vendor/bin/sail artisan db:seed
 ```
 
 ## Making endpoints query
