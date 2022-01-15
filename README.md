@@ -4,21 +4,45 @@
 
 This project aims to cover all the requirements of the Koomo Code Challenge.
 Is based on Laravel and the [Laravel Json Api](https://laraveljsonapi.io/) package, 
-to support as much as possible the [Json Api](https://jsonapi.org/) specification. 
+to support as much as possible the [Json Api](https://jsonapi.org/) specification.
+
+## Project repository
+
+The Git Project is on https://github.com/albertosgz-kooomo-coding/kooomo-code-challenge.
+Run the next command to fetch it.
+
+```shell
+$ git clone git@github.com:albertosgz-kooomo-coding/kooomo-code-challenge.git
+```
 
 ## Install
 
-Once pull it, install all dependencies:
+Once clone it, enter into the folder and install all dependencies:
 ```shell
-$ ./composer install
+$ cd kooomo-code-challenge/
+$ composer install
 ```
 
 Get up and run all containers:
 ```shell
 $ ./vendor/bin/sail up
 ```
+Since the Docker output takes the terminal. Another terminal window is needed.
 
-Setup DB:
+### Database
+
+A schema with name _kooomo_code_challenge_ is necessary in the MySql instance by default.
+
+If you need to connect into it (the Mysql container), the connection information is:
+- Host: mysql
+- Port: 3306
+- Username: sail 
+- Username Password: password 
+- Root Password: password
+
+The previous data is available on `.env` file.
+
+Once the schema is created, open another terminal, and run next command to migrate the database:
 ```shell
 $ ./vendor/bin/sail artisan migrate
 ```
@@ -32,7 +56,7 @@ Remember to run the tests before seed the DB. Otherwise, all data in DB will be 
 
 ## Seed Database
 
-Filling fake data in DB:
+Populate the database, with fake data:
 ```shell
 $ ./vendor/bin/sail artisan db:seed
 ```
