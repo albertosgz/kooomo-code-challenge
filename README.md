@@ -8,11 +8,11 @@ to support as much as possible the [Json Api](https://jsonapi.org/) specificatio
 
 ## Project repository
 
-The Git Project is on https://github.com/albertosgz-kooomo-coding/kooomo-code-challenge.
+The Git Project is on `https://github.com/albertosgz/kooomo-code-challenge`.
 Run the next command to fetch it.
 
 ```shell
-$ git clone git@github.com:albertosgz-kooomo-coding/kooomo-code-challenge.git
+$ git clone https://github.com/albertosgz/kooomo-code-challenge.git
 ```
 
 ## Install
@@ -32,7 +32,8 @@ Another option is to boot up Sail in detach mode with `-d` parameter.
 
 ### Database
 
-A schema with name _kooomo_code_challenge_ is necessary in the MySql instance by default.
+A schema with name _kooomo_code_challenge_ is **necessary** in the MySql instance by default.
+Please create it before proceed with the installation process.
 
 If you need to connect into it (the Mysql container), the connection information is:
 - Host: mysql
@@ -42,6 +43,7 @@ If you need to connect into it (the Mysql container), the connection information
 - Root Password: password
 
 The previous data is available on `.env` file.
+If you want to change some parameter or database schema name, change it in the`.env` file as well.
 
 Once the schema is created, open another terminal, and run next command to migrate the database:
 Once the schema is created run next command to migrate the database:
